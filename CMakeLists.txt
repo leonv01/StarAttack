@@ -13,7 +13,7 @@ set(RAYLIB_SOURCE_PATH extern/raygui/src)
 
 include_directories(src)
 
-file(GLOB MAIN_SOURCE src/main.c)
+file(GLOB_RECURSE MAIN_SOURCE src/*.c)
 
 add_executable(${PROJECT_NAME} ${MAIN_SOURCE})
 
