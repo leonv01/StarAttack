@@ -3,7 +3,12 @@
 #include <raylib.h>
 
 #include <stdio.h>
+#include <math.h>
 
+typedef struct Hand_t
+{
+    Vector3 position;
+} Hand_t;
 
 typedef struct Player_t
 {
@@ -11,6 +16,8 @@ typedef struct Player_t
     float walkSpeed;
     float runFactor;
     float mouseSensivity;
+
+    float playerHeight;
 
     void (*usePrimary)(void);
     void (*useSecondary)(void);
@@ -26,12 +33,13 @@ void InitPlayer(float x, float y, float z)
     player = (Player_t){ 0 };
     player.walkSpeed = 0.1f;
     player.runFactor = 2.0f;
-    player.mouseSensivity = 0.5f;
+    player.mouseSensivity = 0.2f;
     player.usePrimary = primaryAction;
     player.useSecondary = secondaryAction;
+    player.playerHeight = 1.80f;
 
     Camera3D camera = (Camera){ 0 };
-    camera.position = (Vector3){ 0.0f, 2.0f, 4.0f };    // Camera position
+    camera.position = (Vector3){ x, y, player.playerHeight + z };    // Camera position
     camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };      // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 60.0f;                                // Camera field-of-view Y

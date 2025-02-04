@@ -1,3 +1,6 @@
 [submodule "extern/raylib"]
 	path = extern/raylib
 	url = git@github.com:raysan5/raylib.git
+[submodule "extern/lua"]
+	path = extern/lua
+	url = git@github.com:lua/lua.git
