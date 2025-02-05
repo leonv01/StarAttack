@@ -14,10 +14,13 @@ typedef struct Player_t
 {
     Camera3D camera;
     float walkSpeed;
-    float runFactor;
+    float runSpeedFactor;
+    float crouchSpeedFactor;
     float mouseSensivity;
 
     float playerHeight;
+    float crouchHeight;
+    float crouchTransitionFactor;
 
     void (*usePrimary)(void);
     void (*useSecondary)(void);
@@ -31,15 +34,19 @@ static void secondaryAction(void);
 void InitPlayer(float x, float y, float z)
 {
     player = (Player_t){ 0 };
-    player.walkSpeed = 0.1f;
-    player.runFactor = 2.0f;
-    player.mouseSensivity = 0.2f;
     player.usePrimary = primaryAction;
     player.useSecondary = secondaryAction;
+
+    player.walkSpeed = 0.1f;
+    player.runSpeedFactor = 1.7f;
+    player.crouchSpeedFactor = 0.25f;
+    player.mouseSensivity = 0.2f;
     player.playerHeight = 1.80f;
+    player.crouchHeight = 1.00f;
+    player.crouchTransitionFactor = 0.075f;
 
     Camera3D camera = (Camera){ 0 };
-    camera.position = (Vector3){ x, y, player.playerHeight + z };    // Camera position
+    camera.position = (Vector3){ x, player.playerHeight + y, z };    // Camera position
     camera.target = (Vector3){ 0.0f, 2.0f, 0.0f };      // Camera looking at point
     camera.up = (Vector3){ 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
     camera.fovy = 60.0f;                                // Camera field-of-view Y
@@ -54,8 +61,47 @@ void UpdatePlayer(void)
     float speed = player.walkSpeed;
     if(IsKeyDown(KEY_LEFT_SHIFT))
     {
-        speed *= player.runFactor;
+        speed *= player.runSpeedFactor;
     }
+
+    static float currentHeight = 0.0f;
+    static float targetHeight = 0.0f;
+
+    if(IsKeyDown(KEY_LEFT_CONTROL))
+    {
+        targetHeight = player.crouchHeight;
+        speed = player.walkSpeed * player.crouchSpeedFactor;
+    }
+    else
+    {
+        targetHeight = player.playerHeight;
+    }
+
+    if(fabs(currentHeight - targetHeight) > player.crouchTransitionFactor)
+    {
+        if(currentHeight < targetHeight)
+        {
+            currentHeight += player.crouchTransitionFactor;
+            if(currentHeight > targetHeight)
+            {
+                currentHeight = targetHeight;
+            }
+        }
+        else
+        {
+            currentHeight -= player.crouchTransitionFactor;
+            if(currentHeight < targetHeight)
+            {
+                currentHeight = targetHeight;
+            }
+        }
+    }
+    else
+    {
+        currentHeight = targetHeight;
+    }
+
+    player.camera.position.y = currentHeight;
 
     if(IsMouseButtonDown(MOUSE_BUTTON_LEFT))
     {
