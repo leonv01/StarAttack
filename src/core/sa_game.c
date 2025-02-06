@@ -1,6 +1,6 @@
-#include "game.h"
+#include "sa_game.h"
 
-#include "render/render.h"
+#include "render/sa_render.h"
 
 void InitGame()
 {

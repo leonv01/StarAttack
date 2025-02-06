@@ -1,4 +1,4 @@
-#include "core/game.h"
+#include "core/sa_game.h"
 
 #include "core/utils/sa_structures.h"
 

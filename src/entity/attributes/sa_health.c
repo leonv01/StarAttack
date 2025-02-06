@@ -1,4 +1,4 @@
-#include "health.h"
+#include "sa_health.h"
 
 Health_t InitHealth(int health, int maxHealth)
 {

@@ -1,20 +1,21 @@
-#include "render.h"
+#include "sa_render.h"
 
 #include <raylib.h>
 #include <stdio.h>
 
-#include "../../entity/player/player.h"
+#include "../../entity/player/sa_player.h"
+#include "../settings/sa_settings.h"
 
 // TODO: Change to load screen config from file
-static int screenWidth = 2560;
-static int screenHeight = 1440;
-
 void InitRender()
 {
-    InitWindow(screenWidth, screenHeight, "StarAttack Render Window | 3D Scene");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "StarAttack Render Window | 3D Scene");
     DisableCursor();
     SetTargetFPS(60);
-    ToggleFullscreen();
+    if(FULLSCREEN_ACTIVE)
+    {
+        ToggleFullscreen();
+    }
     InitPlayer(4, 0, 4);
 }
 
@@ -28,7 +29,7 @@ void StartRender()
 
     Ray ray = { 0 };
 
-    const Vector2 screenCenter = (Vector2){ screenWidth / 2.0f, screenHeight / 2.0f };
+    const Vector2 screenCenter = (Vector2){ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f };
 
     while(WindowShouldClose() == false)
     {
@@ -50,6 +51,11 @@ void StartRender()
             drawBounding = true;
         }
 
+        if(IsKeyPressed(KEY_F12))
+        {            
+            ToggleFullscreen();
+        }
+        
         BeginDrawing();
         {
             ClearBackground(BLACK);
